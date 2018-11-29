@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     
     'iron.core',
     'iron.fin',
-    'iron.auth',
+    'iron.login',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+## AUTH
+
+AUTH_USER_MODEL = 'login.User'
