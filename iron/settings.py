@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'iron.core',
+    'iron.fin',
+    'iron.auth',
 ]
 
 MIDDLEWARE = [
