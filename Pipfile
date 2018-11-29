@@ -11,6 +11,7 @@ python-decouple = "*"
 pytest = "*"
 pytest-django = "*"
 ipython = "*"
+freezegun = "*"
 
 [requires]
 python_version = "3.7"
