@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 # Create your models here.
 
@@ -61,9 +60,10 @@ class Inscricao(models.Model):
     
     aluno = models.ForeignKey(Aluno, related_name='inscricoes', on_delete='PROTECT')
     turma = models.ForeignKey(Turma, related_name='inscricoes', on_delete='PROTECT')
-    data_entrada = models.DateField(default=timezone.now)
+    data_entrada = models.DateField()
     data_saida = models.DateField(null=True, blank=True)
     observacao = models.CharField(max_length=16, choices=OBS, default=REGULAR)
+    inscricao_anterior = models.OneToOneField('self', related_name='inscricao_seguinte', null=True, on_delete='CASCADE')
     
     def __str__(self):
         return f'{self.aluno} inscrito em {self.turma}'

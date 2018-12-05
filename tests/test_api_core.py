@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 from django.db.utils import IntegrityError
+from django.utils import timezone
 from django.utils.timezone import get_default_timezone
 
 import pytest
@@ -32,7 +33,7 @@ def test_turma():
     assert inscricao1.observacao == models.Inscricao.REGULAR
     
     with freeze_time(datetime(2019,1,7,12,3,0,0,get_default_timezone())):
-        data_hoje = datetime(2019,1,7,12,3,0,0,get_default_timezone()).date()
+        data_hoje = timezone.now().date()
         turma2 = api.turma__cadastrar(
             curso = curso,
             professor = prof,
@@ -40,6 +41,13 @@ def test_turma():
             vagas = 10,
         )
         inscricao2 = api.inscricao__transferir(inscricao1, turma2, data_hoje)
-    
-    assert inscricao1.observacao == models.Inscricao.TRANSFERENCIA
-    assert inscricao2.observacao == models.Inscricao.REGULAR
+        
+        assert inscricao1.observacao == models.Inscricao.TRANSFERENCIA
+        assert inscricao2.observacao == models.Inscricao.REGULAR
+        assert inscricao1.data_saida == data_hoje
+        assert inscricao2.data_entrada == data_hoje
+        assert inscricao1.inscricao_seguinte == inscricao2
+        assert inscricao2.inscricao_anterior == inscricao1
+        assert inscricao1.inscricao_anterior is None
+        with pytest.raises(models.Inscricao.DoesNotExist):
+            inscricao2.inscricao_seguinte

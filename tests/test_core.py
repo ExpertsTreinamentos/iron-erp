@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.db.utils import IntegrityError
+from django.utils import timezone
 
 import pytest
 
@@ -22,11 +23,13 @@ def test_cadastros_basicos():
     inscricao1 = models.Inscricao.objects.create(
         turma = turma,
         aluno = aluno1,
+        data_entrada = timezone.now().date(),
     )
     aluno2 = models.Aluno.objects.create(nome='Aluno 2')
     inscricao2 = models.Inscricao.objects.create(
         turma = turma,
         aluno = aluno2,
+        data_entrada = timezone.now().date(),
     )
     # consultas
     assert turma == curso.turmas.all()[0]

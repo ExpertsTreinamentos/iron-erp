@@ -21,19 +21,25 @@ def turma__cadastrar(curso, professor, data_inicio, vagas):
 def aluno__cadastrar(nome, cpf=None):
     return models.Aluno.objects.create(nome=nome, cpf=cpf)
 
-def inscricao__cadastrar(aluno, turma):
+def inscricao__cadastrar(aluno, turma, data_entrada=None, inscricao_anterior=None):
+    if not data_entrada:
+        data_entrada = timezone.now().date(),
     return models.Inscricao.objects.create(
         aluno = aluno,
         turma = turma,
+        data_entrada = timezone.now().date(),
+        inscricao_anterior = inscricao_anterior,
     )
 
 @transaction.atomic
-def inscricao__transferir(inscricao_atual, turma_destino, data_saida):
+def inscricao__transferir(inscricao_atual, turma_destino, data_entrada_saida):
     inscricao_atual.observacao = models.Inscricao.TRANSFERENCIA
-    inscricao_atual.data_saida = data_saida
+    inscricao_atual.data_saida = data_entrada_saida
     inscricao_atual.save()
     inscricao_nova = inscricao__cadastrar(
         aluno = inscricao_atual.aluno,
         turma = turma_destino,
+        data_entrada = timezone.now().date(),
+        inscricao_anterior = inscricao_atual,
     )
     return inscricao_nova
